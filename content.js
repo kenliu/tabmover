@@ -65,7 +65,7 @@ function createOverlay(windows) {
       <div class="tabmover-header">Move tab to window:</div>
       <div class="tabmover-windows">
         ${windows.map(window => `
-          <div class="tabmover-window" data-window-id="${window.id}" data-number="${window.number}">
+          <div class="tabmover-window${window.isCurrent ? ' current' : ''}" data-window-id="${window.id}" data-number="${window.number}">
             <span class="tabmover-number">${window.number}</span>
             <span class="tabmover-title">${window.title}</span>
             <span class="tabmover-count">(${window.tabCount} tabs)</span>
@@ -91,7 +91,7 @@ function handleKeyPress(event) {
   const number = parseInt(event.key);
   if (number >= 1 && number <= 9) {
     const windowElement = overlay.querySelector(`[data-number="${number}"]`);
-    if (windowElement) {
+    if (windowElement && !windowElement.classList.contains('current')) {
       const windowId = parseInt(windowElement.dataset.windowId);
       hideWindowSelector();
       // Add a small delay to ensure overlay is removed before tab moves

@@ -40,13 +40,16 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getWindows') {
     chrome.windows.getAll({ populate: true }, (windows) => {
-      const windowData = windows.map((window, index) => ({
-        id: window.id,
-        number: index + 1,
-        tabCount: window.tabs.length,
-        title: window.tabs.find(tab => tab.active)?.title || 'Window'
-      }));
-      sendResponse({ windows: windowData });
+      chrome.windows.getCurrent((currentWindow) => {
+        const windowData = windows.map((window, index) => ({
+          id: window.id,
+          number: index + 1,
+          tabCount: window.tabs.length,
+          title: window.tabs.find(tab => tab.active)?.title || 'Window',
+          isCurrent: window.id === currentWindow.id
+        }));
+        sendResponse({ windows: windowData });
+      });
     });
     return true;
   }

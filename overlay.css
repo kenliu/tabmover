@@ -49,6 +49,17 @@
   background-color: #f8f9fa;
 }
 
+.tabmover-window.current {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.tabmover-window.current:hover {
+  border-color: #e0e0e0;
+  background-color: #f5f5f5;
+}
+
 .tabmover-number {
   background: #007bff;
   color: white;
