@@ -41,13 +41,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getWindows') {
     chrome.windows.getAll({ populate: true }, (windows) => {
       chrome.windows.getCurrent((currentWindow) => {
-        const windowData = windows.map((window, index) => ({
-          id: window.id,
-          number: index + 1,
-          tabCount: window.tabs.length,
-          title: window.tabs.find(tab => tab.active)?.title || 'Window',
-          isCurrent: window.id === currentWindow.id
-        }));
+        const windowData = windows.map((window, index) => {
+          // Use numbers 1-9, then letters A-Z for windows 10+
+          let identifier;
+          if (index < 9) {
+            identifier = (index + 1).toString();
+          } else {
+            // Convert to letter: index 9 = A, index 10 = B, etc.
+            identifier = String.fromCharCode(65 + (index - 9));
+          }
+          
+          return {
+            id: window.id,
+            number: identifier,
+            tabCount: window.tabs.length,
+            title: window.tabs.find(tab => tab.active)?.title || 'Window',
+            isCurrent: window.id === currentWindow.id
+          };
+        });
         sendResponse({ windows: windowData });
       });
     });

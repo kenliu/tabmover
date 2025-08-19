@@ -121,7 +121,7 @@ Configuration interface for custom shortcuts:
 5. **Content script** requests window list via `getWindows` message
 6. **Background script** queries windows and returns data with current window marked
 7. **Content script** creates overlay with window list
-8. **User selects window** by pressing number key
+8. **User selects window** by pressing number key (1-9) or letter key (A-Z for windows 10+)
 9. **Content script** hides overlay and sends `moveTabToWindow` message
 10. **Background script** moves tab and updates last window memory
 

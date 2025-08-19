@@ -6,7 +6,7 @@ A Chrome extension that makes it easy to move tabs between windows with keyboard
 
 ### 🎯 **Window Selector Overlay**
 - Press **Ctrl+Shift+M** (Cmd+Shift+M on Mac) to show a numbered list of all open windows
-- Type a number to instantly move the current tab to that window
+- Type a number (1-9) or letter (A-Z for windows 10+) to instantly move the current tab to that window
 - Clean, centered overlay that doesn't interfere with your workflow
 
 ### ⚡ **Quick Move to Last Window**
@@ -31,7 +31,7 @@ A Chrome extension that makes it easy to move tabs between windows with keyboard
 
 ### Basic Tab Moving
 1. **Ctrl+Shift+M** (or Cmd+Shift+M) - Opens window selector
-2. **Type a number** (1-9) - Moves tab to that window
+2. **Type a number or letter** (1-9, A-Z) - Moves tab to that window
 3. **ESC** - Cancel and close overlay
 
 ### Quick Last Window Move

@@ -72,7 +72,7 @@ function createOverlay(windows) {
           </div>
         `).join('')}
       </div>
-      <div class="tabmover-footer">Press a number or ESC to cancel</div>
+      <div class="tabmover-footer">Press a number (1-9) or letter (A-Z) or ESC to cancel</div>
     </div>
   `;
 
@@ -88,9 +88,17 @@ function handleKeyPress(event) {
     return;
   }
 
+  // Handle both numbers (1-9) and letters (A-Z)
+  let identifier = null;
   const number = parseInt(event.key);
   if (number >= 1 && number <= 9) {
-    const windowElement = overlay.querySelector(`[data-number="${number}"]`);
+    identifier = number.toString();
+  } else if (event.key.match(/^[A-Za-z]$/)) {
+    identifier = event.key.toUpperCase();
+  }
+
+  if (identifier) {
+    const windowElement = overlay.querySelector(`[data-number="${identifier}"]`);
     if (windowElement && !windowElement.classList.contains('current')) {
       const windowId = parseInt(windowElement.dataset.windowId);
       hideWindowSelector();
