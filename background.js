@@ -20,8 +20,11 @@ chrome.commands.onCommand.addListener((command) => {
           } else {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               if (tabs[0]) {
-                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 });
-                chrome.windows.update(result.lastWindowId, { focused: true });
+                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 }, (movedTab) => {
+                  // Activate the moved tab in the destination window
+                  chrome.tabs.update(movedTab.id, { active: true });
+                  chrome.windows.update(result.lastWindowId, { focused: true });
+                });
               }
             });
           }
@@ -68,9 +71,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'moveTabToWindow') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
-        chrome.tabs.move(tabs[0].id, { windowId: message.windowId, index: -1 });
-        chrome.windows.update(message.windowId, { focused: true });
-        chrome.storage.sync.set({ lastWindowId: message.windowId });
+        chrome.tabs.move(tabs[0].id, { windowId: message.windowId, index: -1 }, (movedTab) => {
+          // Activate the moved tab in the destination window
+          chrome.tabs.update(movedTab.id, { active: true });
+          chrome.windows.update(message.windowId, { focused: true });
+          chrome.storage.sync.set({ lastWindowId: message.windowId });
+        });
       }
     });
   }
@@ -104,8 +110,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           } else {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               if (tabs[0]) {
-                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 });
-                chrome.windows.update(result.lastWindowId, { focused: true });
+                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 }, (movedTab) => {
+                  // Activate the moved tab in the destination window
+                  chrome.tabs.update(movedTab.id, { active: true });
+                  chrome.windows.update(result.lastWindowId, { focused: true });
+                });
               }
             });
           }
