@@ -17,9 +17,14 @@ document.addEventListener('keydown', (event) => {
       metaKey: event.metaKey
     }
   }, (response) => {
-    if (response && response.matches) {
-      event.preventDefault();
-      showWindowSelector();
+    if (response) {
+      if (response.matches) {
+        event.preventDefault();
+        showWindowSelector();
+      } else if (response.lastMatches) {
+        event.preventDefault();
+        chrome.runtime.sendMessage({ action: 'moveToLastWindow' });
+      }
     }
   });
 });

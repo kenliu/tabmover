@@ -16,6 +16,13 @@
         "mac": "Command+Shift+M"
       },
       "description": "Show window selector to move current tab"
+    },
+    "move-to-last": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Move current tab to last used window"
     }
   },
   "background": {

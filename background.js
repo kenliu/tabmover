@@ -6,6 +6,35 @@ chrome.commands.onCommand.addListener((command) => {
       }
     });
   }
+  
+  if (command === 'move-to-last') {
+    chrome.storage.sync.get(['lastWindowId'], (result) => {
+      if (result.lastWindowId) {
+        chrome.windows.get(result.lastWindowId, (window) => {
+          if (chrome.runtime.lastError) {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs[0]) {
+                chrome.tabs.sendMessage(tabs[0].id, { action: 'showWindowSelector' });
+              }
+            });
+          } else {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs[0]) {
+                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 });
+                chrome.windows.update(result.lastWindowId, { focused: true });
+              }
+            });
+          }
+        });
+      } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0]) {
+            chrome.tabs.sendMessage(tabs[0].id, { action: 'showWindowSelector' });
+          }
+        });
+      }
+    });
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -27,20 +56,54 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (tabs[0]) {
         chrome.tabs.move(tabs[0].id, { windowId: message.windowId, index: -1 });
         chrome.windows.update(message.windowId, { focused: true });
+        chrome.storage.sync.set({ lastWindowId: message.windowId });
       }
     });
   }
   
   if (message.action === 'shortcutUpdated') {
-    chrome.storage.sync.set({ customShortcut: message.shortcut });
+    chrome.storage.sync.set({ 
+      customShortcut: message.shortcut,
+      customLastShortcut: message.lastShortcut
+    });
   }
   
   if (message.action === 'checkCustomShortcut') {
-    chrome.storage.sync.get(['customShortcut'], (result) => {
-      const matches = result.customShortcut && isShortcutMatch(message.event, result.customShortcut);
-      sendResponse({ matches: matches });
+    chrome.storage.sync.get(['customShortcut', 'customLastShortcut'], (result) => {
+      const mainMatches = result.customShortcut && isShortcutMatch(message.event, result.customShortcut);
+      const lastMatches = result.customLastShortcut && isShortcutMatch(message.event, result.customLastShortcut);
+      sendResponse({ matches: mainMatches, lastMatches: lastMatches });
     });
     return true;
+  }
+  
+  if (message.action === 'moveToLastWindow') {
+    chrome.storage.sync.get(['lastWindowId'], (result) => {
+      if (result.lastWindowId) {
+        chrome.windows.get(result.lastWindowId, (window) => {
+          if (chrome.runtime.lastError) {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs[0]) {
+                chrome.tabs.sendMessage(tabs[0].id, { action: 'showWindowSelector' });
+              }
+            });
+          } else {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs[0]) {
+                chrome.tabs.move(tabs[0].id, { windowId: result.lastWindowId, index: -1 });
+                chrome.windows.update(result.lastWindowId, { focused: true });
+              }
+            });
+          }
+        });
+      } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0]) {
+            chrome.tabs.sendMessage(tabs[0].id, { action: 'showWindowSelector' });
+          }
+        });
+      }
+    });
   }
 });
 

@@ -85,22 +85,32 @@
   <h1>TabMover Options</h1>
   
   <div class="section">
-    <h2>Keyboard Shortcut</h2>
+    <h2>Keyboard Shortcuts</h2>
     <div class="field-group">
-      <label for="shortcut">Custom Keyboard Shortcut:</label>
-      <input type="text" id="shortcut" placeholder="e.g., Ctrl+Shift+T">
+      <label for="shortcut">Show Window Selector:</label>
+      <input type="text" id="shortcut" placeholder="e.g., Ctrl+Shift+M">
       <div class="help-text">
-        Use modifiers: Ctrl, Alt, Shift, Command (Mac)<br>
-        Examples: "Ctrl+Shift+M", "Alt+T", "Command+Shift+W"
+        Opens overlay to select which window to move tab to<br>
+        Default: Ctrl+Shift+M (Cmd+Shift+M on Mac)
       </div>
     </div>
     
     <div class="field-group">
-      <label>Current Chrome shortcut:</label>
-      <div class="current-shortcut" id="current-shortcut">Loading...</div>
+      <label for="lastShortcut">Move to Last Window:</label>
+      <input type="text" id="lastShortcut" placeholder="e.g., Ctrl+Shift+L">
       <div class="help-text">
-        This shows the shortcut currently set in Chrome's extension settings.<br>
-        Note: Chrome's built-in shortcut takes precedence over custom shortcuts.
+        Immediately moves current tab to the last window used<br>
+        Default: Ctrl+Shift+L (Cmd+Shift+L on Mac)
+      </div>
+    </div>
+    
+    <div class="field-group">
+      <label>Current Chrome shortcuts:</label>
+      <div class="current-shortcut" id="current-shortcut">Loading...</div>
+      <div class="current-shortcut" id="current-last-shortcut">Loading...</div>
+      <div class="help-text">
+        These show shortcuts currently set in Chrome's extension settings.<br>
+        Note: Chrome's built-in shortcuts take precedence over custom shortcuts.
       </div>
     </div>
     
