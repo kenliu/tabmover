@@ -72,14 +72,25 @@ function createOverlay(windows) {
           </div>
         `).join('')}
       </div>
-      <div class="tabmover-footer">Press a number (1-9) or letter (A-Z) or ESC to cancel</div>
+      <div class="tabmover-footer">Click a window or press a number (1-9) or letter (A-Z) or ESC to cancel</div>
     </div>
   `;
 
   document.body.appendChild(overlay);
 
   document.addEventListener('keydown', handleKeyPress);
-  overlay.addEventListener('click', hideWindowSelector);
+  
+  // Add click handlers to individual window rows
+  overlay.querySelectorAll('.tabmover-window').forEach(windowElement => {
+    windowElement.addEventListener('click', handleWindowClick);
+  });
+  
+  // Close overlay when clicking on background (but not on modal content)
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      hideWindowSelector();
+    }
+  });
 }
 
 function handleKeyPress(event) {
@@ -100,17 +111,31 @@ function handleKeyPress(event) {
   if (identifier) {
     const windowElement = overlay.querySelector(`[data-number="${identifier}"]`);
     if (windowElement && !windowElement.classList.contains('current')) {
-      const windowId = parseInt(windowElement.dataset.windowId);
-      hideWindowSelector();
-      // Add a small delay to ensure overlay is removed before tab moves
-      setTimeout(() => {
-        chrome.runtime.sendMessage({ 
-          action: 'moveTabToWindow', 
-          windowId: windowId 
-        });
-      }, 50);
+      moveToWindow(windowElement);
     }
   }
+}
+
+function handleWindowClick(event) {
+  event.stopPropagation(); // Prevent closing overlay
+  const windowElement = event.currentTarget;
+  
+  // Don't allow clicking on current window
+  if (!windowElement.classList.contains('current')) {
+    moveToWindow(windowElement);
+  }
+}
+
+function moveToWindow(windowElement) {
+  const windowId = parseInt(windowElement.dataset.windowId);
+  hideWindowSelector();
+  // Add a small delay to ensure overlay is removed before tab moves
+  setTimeout(() => {
+    chrome.runtime.sendMessage({ 
+      action: 'moveTabToWindow', 
+      windowId: windowId 
+    });
+  }, 50);
 }
 
 function hideWindowSelector() {
