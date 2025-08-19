@@ -1,8 +1,22 @@
 let overlay = null;
 
+// Clean up any leftover overlays on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const leftoverOverlays = document.querySelectorAll('#tabmover-overlay');
+  leftoverOverlays.forEach(el => el.remove());
+});
+
+// Also clean up on window focus (when tab becomes active)
+window.addEventListener('focus', () => {
+  const leftoverOverlays = document.querySelectorAll('#tabmover-overlay');
+  leftoverOverlays.forEach(el => el.remove());
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'showWindowSelector') {
     showWindowSelector();
+  } else if (message.action === 'hideOverlay') {
+    hideWindowSelector();
   }
 });
 
@@ -23,6 +37,7 @@ document.addEventListener('keydown', (event) => {
         showWindowSelector();
       } else if (response.lastMatches) {
         event.preventDefault();
+        hideWindowSelector();
         chrome.runtime.sendMessage({ action: 'moveToLastWindow' });
       }
     }
@@ -78,11 +93,14 @@ function handleKeyPress(event) {
     const windowElement = overlay.querySelector(`[data-number="${number}"]`);
     if (windowElement) {
       const windowId = parseInt(windowElement.dataset.windowId);
-      chrome.runtime.sendMessage({ 
-        action: 'moveTabToWindow', 
-        windowId: windowId 
-      });
       hideWindowSelector();
+      // Add a small delay to ensure overlay is removed before tab moves
+      setTimeout(() => {
+        chrome.runtime.sendMessage({ 
+          action: 'moveTabToWindow', 
+          windowId: windowId 
+        });
+      }, 50);
     }
   }
 }
@@ -93,5 +111,8 @@ function hideWindowSelector() {
     overlay.remove();
     overlay = null;
   }
+  // Force remove any remaining overlays
+  const remainingOverlays = document.querySelectorAll('#tabmover-overlay');
+  remainingOverlays.forEach(el => el.remove());
 }
 
