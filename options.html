@@ -79,6 +79,78 @@
       margin-top: 8px;
       border: 1px solid #e0e0e0;
     }
+    
+    .window-names-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .window-name-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .window-name-text {
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .window-name-id {
+      font-size: 12px;
+      color: #666;
+      margin-left: 8px;
+    }
+    
+    .window-name-remove {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .window-name-remove:hover {
+      background: #c82333;
+    }
+    
+    .window-name-details {
+      margin-top: 4px;
+      font-size: 12px;
+    }
+    
+    .window-name-domains {
+      display: block;
+      color: #495057;
+      margin-bottom: 2px;
+    }
+    
+    .window-name-stats {
+      display: block;
+      color: #6c757d;
+      margin-bottom: 2px;
+    }
+    
+    .window-name-status {
+      display: block;
+      font-weight: 500;
+    }
+    
+    .window-name-status.matched {
+      color: #28a745;
+    }
+    
+    .window-name-status.unmatched {
+      color: #6c757d;
+    }
   </style>
 </head>
 <body>
@@ -116,6 +188,21 @@
     
     <button class="save-button" id="save">Save Settings</button>
     <span class="status" id="status"></span>
+  </div>
+  
+  <div class="section">
+    <h2>Window Names</h2>
+    <div class="field-group">
+      <label>Manage custom window names:</label>
+      <div id="window-names-list">
+        <div class="help-text">Custom window names will appear here. You can also name windows directly from the TabMover overlay.</div>
+      </div>
+      <div class="window-names-actions">
+        <button class="save-button" id="clear-all-names">Clear All Names</button>
+        <button class="save-button" id="cleanup-old-names">Cleanup Old</button>
+        <button class="save-button" id="refresh-names">Refresh</button>
+      </div>
+    </div>
   </div>
   
   <script src="options.js"></script>
